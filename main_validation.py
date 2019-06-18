@@ -132,17 +132,15 @@ for _, ds_doy in ds_rea_roll.groupby("time.dayofyear"):
     
     eigenvalues = msolver.eigenvalues(neigs=5)
     
-    SLP=SLP[0:2,:,:]
-    SHUM=SHUM[0:2,:,:]
-    RHUM=RHUM[0:2,:,:]
-    #WRONG
-    pseudo_pcs = msolver.projectField([SLP, RHUM, SHUM])
+    D=0
     
-    #variance_fraction_mode_1 = msolver.varianceFraction(neigs=5)
-    print(SLP.shape)
-    print(pseudo_pcs.shape)
+    pseudo_pcs = msolver.projectField([SLP[D,:,:], RHUM[D,:,:], SHUM[D,:,:]],neofs=5)
     
-    field = pseudo_pcs[0][0]*eofs_slp[0]+pseudo_pcs[0][1]*eofs_slp[1]+pseudo_pcs[0][2]*eofs_slp[2]+pseudo_pcs[0][3]*eofs_slp[3]+pseudo_pcs[0][4]*eofs_slp[4]
+    variance_fraction = msolver.varianceFraction(neigs=5)
+    
+    total_variance = msolver.totalAnomalyVariance()
+
+    field = pseudo_pcs[0]*eofs_slp[0]+pseudo_pcs[1]*eofs_slp[1]+pseudo_pcs[2]*eofs_slp[2]+pseudo_pcs[3]*eofs_slp[3]+pseudo_pcs[4]*eofs_slp[4]
     
     
     #--------------- Plotting of EOFs ---------------------------------
